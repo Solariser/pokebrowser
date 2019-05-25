@@ -1,62 +1,91 @@
 import React, { Component } from 'react';
+import { NativeSelect, Grid, Typography } from '@material-ui/core';
+import PokemonCard from './components/PokemonCard';
 
 class App extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            pokemon: [],
-            loaded: false
+            favourites: [],
+            loaded: false,
+            select_one: '',
+            select_two: '',
+            select_fave: ''
         }
     }
 
-    componentDidMount() {
+    addToFavourites(pokemon_no) {
+        this.setState(prevState => ({
+            favourites: [...prevState.favourites, pokemon_no]
+        }));
+    }
+
+    loadOriginalPokemon() {
+        let pokemon_options = [];
+
         for (let i = 1; i <= 151; i++) {
-            let url = 'https://pokeapi.co/api/v2/pokemon/' + i;
-
-            fetch(url)
-            .then((pokemon) => {
-                return pokemon.json();
-            })
-            .then((pokemondata) => {
-                console.log(pokemondata.name);
-
-                if (this.state.pokemon.length >= 150) {
-                    this.setState(prevState => ({
-                        pokemon: [...prevState.pokemon, pokemondata],
-                        loaded: true
-                    }));
-                } else {
-                    this.setState(prevState => ({
-                        pokemon: [...prevState.pokemon, pokemondata]
-                    }));
-                }
-            })
+            pokemon_options.push(
+                <option key={'pokemon#' + i} value={i}>{i}</option>
+            );
         }
+
+        return pokemon_options;
+    }
+
+    handleChange(type, e) {
+        this.setState({
+            [type]: e.target.value
+        })
     }
 
     render() {
-        console.log(this.state);
-
-        if (this.state.loaded) {
-            console.log("Load successful");
-            console.log(this.state);
-        }
 
         return (
             <div>
-                <header>
-                    <p>
-                        Edit <code>src/App.js</code> and save to reload.
-                    </p>
-                    <a
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >
-                        Learn React
-                    </a>
-                </header>
+                <Grid container>
+                    <Grid item xs={4}>
+                        <Typography>First Choice</Typography>
+                        <NativeSelect
+                            value={this.state.select_one}
+                            onChange={(e) => this.handleChange('select_one', e)}
+                            name="select_one"
+                        >
+                            <option value=""></option>
+                            { this.loadOriginalPokemon() }
+                        </NativeSelect>
+                        <PokemonCard
+                            choice={ this.state.select_one }
+                        />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Typography>Second Choice</Typography>
+                        <NativeSelect
+                            value={this.state.select_two}
+                            onChange={(e) => this.handleChange('select_two', e)}
+                            name="select_two"
+                        >
+                            <option value=""></option>
+                            { this.loadOriginalPokemon() }
+                        </NativeSelect>
+                        <PokemonCard
+                            choice={ this.state.select_two }
+                        />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Typography>Fave Choice</Typography>
+                        <NativeSelect
+                            value={this.state.select_fave}
+                            onChange={(e) => this.handleChange('select_fave', e)}
+                            name="select_fave"
+                        >
+                            <option value=""></option>
+                        </NativeSelect>
+                        <PokemonCard
+                            choice={ this.state.select_fave }
+                        />
+                    </Grid>
+                </Grid>
             </div>
         );
     }
