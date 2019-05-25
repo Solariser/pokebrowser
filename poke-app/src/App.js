@@ -16,9 +16,24 @@ class App extends Component {
     }
 
     addToFavourites(pokemon_no) {
-        this.setState(prevState => ({
-            favourites: [...prevState.favourites, pokemon_no]
-        }));
+        if (!(this.state.favourites.indexOf(pokemon_no) >= 0)) {
+            this.setState(prevState => ({
+                favourites: [...prevState.favourites, pokemon_no]
+            }));
+        }
+    }
+
+    removeFromFavourites(pokemon_no) {
+        if (this.state.favourites.indexOf(pokemon_no) >= 0) {
+            let new_favourites = [...this.state.favourites];
+            let index = this.state.favourites.indexOf(pokemon_no);
+            new_favourites.splice(index, 1);
+
+            this.setState({
+                favourites: new_favourites,
+                select_fave: ''
+            });
+        }
     }
 
     loadOriginalPokemon() {
@@ -31,6 +46,20 @@ class App extends Component {
         }
 
         return pokemon_options;
+    }
+
+    loadFavouritePokemon() {
+        if (this.state.favourites.length > 0) {
+            let favourite_pokemon = [];
+
+            for (let i = 0; i < this.state.favourites.length; i++) {
+                favourite_pokemon.push(
+                    <option key={'favourite#' + i} value={this.state.favourites[i]}>{this.state.favourites[i]}</option>
+                );
+            }
+
+            return favourite_pokemon;
+        }
     }
 
     handleChange(type, e) {
@@ -56,6 +85,7 @@ class App extends Component {
                         </NativeSelect>
                         <PokemonCard
                             choice={ this.state.select_one }
+                            addToFavourites = { (pokemon_no) => this.addToFavourites(pokemon_no) }
                         />
                     </Grid>
                     <Grid item xs={4}>
@@ -70,6 +100,7 @@ class App extends Component {
                         </NativeSelect>
                         <PokemonCard
                             choice={ this.state.select_two }
+                            addToFavourites = { (pokemon_no) => this.addToFavourites(pokemon_no) }
                         />
                     </Grid>
                     <Grid item xs={4}>
@@ -80,9 +111,11 @@ class App extends Component {
                             name="select_fave"
                         >
                             <option value=""></option>
+                            { this.loadFavouritePokemon() }
                         </NativeSelect>
                         <PokemonCard
                             choice={ this.state.select_fave }
+                            removeFromFavourites={ (pokemon_no) => this.removeFromFavourites(pokemon_no)}
                         />
                     </Grid>
                 </Grid>

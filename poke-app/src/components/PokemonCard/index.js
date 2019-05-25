@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Grid, Typography, Button } from '@material-ui/core';
 
 class PokemonCard extends Component {
     constructor(props) {
@@ -29,11 +30,34 @@ class PokemonCard extends Component {
     }
 
     render() {
+        if (this.state.choice > 0) {
+            return (
+                <div>
+                    { this.props.addToFavourites ?
+                    <Button
+                        color="primary"
+                        onClick={ () => this.props.addToFavourites(this.state.pokemon.id) }
+                    >
+                        Add to Favourites
+                    </Button>
+                    : "" }
+                    { this.props.removeFromFavourites ?
+                    <Button
+                        color="primary"
+                        onClick={ () => this.props.removeFromFavourites(this.state.pokemon.id) }
+                    >
+                        Remove from Favourites
+                    </Button>
+                    : "" }
+                    <Typography>#{ this.state.pokemon.id } : { this.state.pokemon.name }</Typography>
+                </div>
+            );
+        }
         return (
             <div>
-                Pokemon Card Placeholder : { this.state.pokemon.name }
+                <Typography>You have not selected a pokemon.</Typography>
             </div>
-        );
+        )
     }
 
 }
