@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { NativeSelect, Grid, Typography } from '@material-ui/core';
 import PokemonCard from './components/PokemonCard';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+    header: {
+        backgroundColor: '#669999'
+    }
+});
 
 class App extends Component {
     constructor(props) {
@@ -72,47 +79,58 @@ class App extends Component {
 
         return (
             <div>
-                <Grid container>
-                    <Grid item xs={4}>
-                        <Typography>First Choice</Typography>
+                <Grid container className={ this.props.classes.header }>
+                    <Grid item xs={4} align="center">
+                        <Typography variant="h6">First Choice</Typography>
                         <NativeSelect
                             value={this.state.select_one}
                             onChange={(e) => this.handleChange('select_one', e)}
                             name="select_one"
+                            fullWidth
                         >
                             <option value=""></option>
                             { this.loadOriginalPokemon() }
                         </NativeSelect>
+                    </Grid>
+                    <Grid item xs={4} align="center">
+                        <Typography variant="h6">Second Choice</Typography>
+                        <NativeSelect
+                            value={this.state.select_two}
+                            onChange={(e) => this.handleChange('select_two', e)}
+                            name="select_two"
+                            fullWidth
+                        >
+                            <option value=""></option>
+                            { this.loadOriginalPokemon() }
+                        </NativeSelect>
+                    </Grid>
+                    <Grid item xs={4} align="center">
+                        <Typography variant="h6">Fave Choice</Typography>
+                        <NativeSelect
+                            value={this.state.select_fave}
+                            onChange={(e) => this.handleChange('select_fave', e)}
+                            name="select_fave"
+                            fullWidth
+                        >
+                            <option value=""></option>
+                            { this.loadFavouritePokemon() }
+                        </NativeSelect>
+                    </Grid>
+                </Grid>
+                <Grid container>
+                    <Grid item xs={4}>
                         <PokemonCard
                             choice={ this.state.select_one }
                             addToFavourites = { (pokemon_no) => this.addToFavourites(pokemon_no) }
                         />
                     </Grid>
                     <Grid item xs={4}>
-                        <Typography>Second Choice</Typography>
-                        <NativeSelect
-                            value={this.state.select_two}
-                            onChange={(e) => this.handleChange('select_two', e)}
-                            name="select_two"
-                        >
-                            <option value=""></option>
-                            { this.loadOriginalPokemon() }
-                        </NativeSelect>
                         <PokemonCard
                             choice={ this.state.select_two }
                             addToFavourites = { (pokemon_no) => this.addToFavourites(pokemon_no) }
                         />
                     </Grid>
                     <Grid item xs={4}>
-                        <Typography>Fave Choice</Typography>
-                        <NativeSelect
-                            value={this.state.select_fave}
-                            onChange={(e) => this.handleChange('select_fave', e)}
-                            name="select_fave"
-                        >
-                            <option value=""></option>
-                            { this.loadFavouritePokemon() }
-                        </NativeSelect>
                         <PokemonCard
                             choice={ this.state.select_fave }
                             removeFromFavourites={ (pokemon_no) => this.removeFromFavourites(pokemon_no)}
@@ -125,4 +143,4 @@ class App extends Component {
 
 }
 
-export default App;
+export default withStyles(styles)(App);
